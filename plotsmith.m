@@ -26,7 +26,7 @@
 %% OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 %% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-function [] = plotsmith(frequency,z)
+function [] = plotsmith(frequency,z,marker)
   sz = size(z);
   sf = size(frequency);
   if size(z) != size(frequency)
@@ -35,6 +35,11 @@ function [] = plotsmith(frequency,z)
   
   if ((sz(1)!=1) && (sz(2)!=1))
     error('The Impedance must be a Vector');
+  end
+  if exist('marker')
+    if ((marker < frequency(1)) || (marker > frequency(end)))
+      error('Marker must be in the range of Frequency');
+    end
   end
   if sz(1)!=1
     z=z.';
@@ -83,4 +88,10 @@ function [] = plotsmith(frequency,z)
   zn=z./50;
   zt=(zn-1)./(zn+1);
   plot(real(zt),imag(zt),'r');
+  if exist('marker')
+    [val idx]=min(abs(frequency-marker));
+    x_marker=real(zt(idx));
+    y_marker=imag(zt(idx));
+    plot(x_marker,y_marker,'rx');
+  end
 endfunction
